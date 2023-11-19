@@ -17,3 +17,4 @@ BYTE g_Shellcode[0x4200] = {};
 HWND hEditMultiline;
 std::wstring g_TextContent;
 WNDPROC DefaultEditProc;  // Declare a global variable to store the default window procedure
+HBRUSH g_CheckboxBackgroundBrush = CreateSolidBrush(RGB(255, 0, 0)); 

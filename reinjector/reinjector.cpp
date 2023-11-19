@@ -21,6 +21,7 @@ int APIENTRY wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPWSTR lpCmd
     wc.hInstance = hInstance;
     wc.lpszClassName = _T("MyWindowClass");
     wc.hbrBackground = CreateSolidBrush(RGB(64, 64, 64));
+    wc.hIcon = LoadIcon(GetModuleHandle(NULL), MAKEINTRESOURCE(IDI_ICON1));
 
     RegisterClass(&wc);
 
@@ -43,6 +44,7 @@ int APIENTRY wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPWSTR lpCmd
     }
 
     DeleteObject(wc.hbrBackground);
+    
 
     return 0;
 }
@@ -113,6 +115,17 @@ void checkbox_injection_type(WPARAM wParam, HWND checkbox, HWND button)
         EnableWindow(hButton4, FALSE);
         EnableWindow(hButton5, FALSE);
     }
+}
+
+void DrawCheckboxBackground(HWND hwnd, DRAWITEMSTRUCT* drawItem)
+{
+    RECT rc = drawItem->rcItem;
+
+    // Draw the background
+    FillRect(drawItem->hDC, &rc, g_CheckboxBackgroundBrush);
+
+    // Draw the checkbox
+    DrawFrameControl(drawItem->hDC, &rc, DFC_BUTTON, DFCS_BUTTONCHECK | (drawItem->itemState & ODS_CHECKED));
 }
 
 LRESULT CALLBACK WindowProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
@@ -216,6 +229,16 @@ LRESULT CALLBACK WindowProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
         MoveWindow(hCheckbox2, LOWORD(lParam) - 110, HIWORD(lParam) - 40, 100, 30, TRUE);
         MoveWindow(hCheckbox3, LOWORD(lParam) - 110, HIWORD(lParam) - 120, 100, 30, TRUE);
         break;
+    }
+    case WM_CTLCOLORSTATIC:
+    {
+        if ((HWND)lParam == hCheckbox3 || (HWND)lParam == hCheckbox2 || (HWND)lParam == hCheckbox1)
+        {
+            HDC hdc = (HDC)wParam;
+            SetTextColor(hdc, RGB(255, 255, 255));
+            SetBkColor(hdc, RGB(64, 64, 64));
+            return (LRESULT)GetStockObject(NULL_BRUSH);
+        }
     }
     case WM_COMMAND:
         switch (LOWORD(wParam))
@@ -346,6 +369,7 @@ LRESULT CALLBACK WindowProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
         break;
     }
     case WM_DESTROY:
+        DeleteObject(g_CheckboxBackgroundBrush);
         PostQuitMessage(0);
         break;
 

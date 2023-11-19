@@ -90,7 +90,7 @@
     <Image Include="small.ico">
       <Filter>Resource Files</Filter>
     </Image>
-    <Image Include="reinjector.ico">
+    <Image Include="Icon\Icon.ico">
       <Filter>Resource Files</Filter>
     </Image>
   </ItemGroup>
