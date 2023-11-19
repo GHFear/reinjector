@@ -133,6 +133,7 @@
   <ItemGroup>
     <ClInclude Include="framework.h" />
     <ClInclude Include="Injectors\CreateRemoteLoadLibrary\CreateRemoteLoadLibrary.h" />
+    <ClInclude Include="Injectors\LaunchAndInject\launch_and_inject.h" />
     <ClInclude Include="Injectors\ReflectiveInjection\reflective_injection.h" />
     <ClInclude Include="Program\DllDialog\dll_dialog.h" />
     <ClInclude Include="Program\ListProcesses\list_processes.h" />

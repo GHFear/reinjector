@@ -37,6 +37,9 @@
     <Filter Include="Header Files\Program\ShellcodeEditor">
       <UniqueIdentifier>{916fb48b-6dba-4d9b-a8d4-5f6866cb1995}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Header Files\Injectors\LaunchAndInject">
+      <UniqueIdentifier>{fc9063bb-0d52-4350-a94e-fb640526817f}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="framework.h">
@@ -68,6 +71,9 @@
     </ClInclude>
     <ClInclude Include="Program\ShellcodeEditor\shellcode_editor.h">
       <Filter>Header Files\Program\ShellcodeEditor</Filter>
+    </ClInclude>
+    <ClInclude Include="Injectors\LaunchAndInject\launch_and_inject.h">
+      <Filter>Header Files\Injectors\LaunchAndInject</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
