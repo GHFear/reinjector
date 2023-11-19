@@ -1,12 +1,6 @@
 #pragma once
 #include "../../reinjector.h"
-#include <Windows.h>
-#include <iostream>
-#include <Commdlg.h>
-#include <CommCtrl.h>
-#include <tchar.h>
-#include <Psapi.h>
-#include <tlhelp32.h>
+
 
 DWORD selected_process_id = 0;
 WCHAR process_id_string[11];

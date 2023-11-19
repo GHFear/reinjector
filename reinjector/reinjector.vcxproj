@@ -136,6 +136,7 @@
     <ClInclude Include="Injectors\ReflectiveInjection\reflective_injection.h" />
     <ClInclude Include="Program\DllDialog\dll_dialog.h" />
     <ClInclude Include="Program\ListProcesses\list_processes.h" />
+    <ClInclude Include="Program\ShellcodeEditor\shellcode_editor.h" />
     <ClInclude Include="Tools\Text.h" />
     <ClInclude Include="reinjector.h" />
     <ClInclude Include="Resource.h" />

@@ -34,6 +34,9 @@
     <Filter Include="Header Files\Injectors\CreateRemoteLoadLibrary">
       <UniqueIdentifier>{3d4e2ce8-2827-44a3-92a5-359d55c16f17}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Header Files\Program\ShellcodeEditor">
+      <UniqueIdentifier>{916fb48b-6dba-4d9b-a8d4-5f6866cb1995}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="framework.h">
@@ -62,6 +65,9 @@
     </ClInclude>
     <ClInclude Include="Program\DllDialog\dll_dialog.h">
       <Filter>Header Files\Program\DllDialog</Filter>
+    </ClInclude>
+    <ClInclude Include="Program\ShellcodeEditor\shellcode_editor.h">
+      <Filter>Header Files\Program\ShellcodeEditor</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

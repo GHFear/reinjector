@@ -1,8 +1,22 @@
 #pragma once
-#include <Windows.h>
-#include <iostream>
+#include "../../reinjector.h"
 
 void InjectDLL_WriteProcessMemory(DWORD processId, const char* dllPath) {
+
+    // Check if process id is 0
+    if (processId == 0)
+    {
+        MessageBox(nullptr, L"Process ID is null!", L"Injection Status", MB_OK);
+        return;
+    }
+
+    // Check if shellcode is nullptr or 0 in size
+    if (strlen(dllPath) == 0)
+    {
+        MessageBox(nullptr, L"Dll Path is null!", L"Injection Status", MB_OK);
+        return;
+    }
+
     AllocConsole();
     HANDLE hProcess = OpenProcess(PROCESS_ALL_ACCESS, FALSE, processId);
     if (hProcess == NULL) {

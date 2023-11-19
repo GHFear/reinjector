@@ -1,5 +1,7 @@
 #pragma once
 #include <Windows.h>
+#include <sstream>
+#include <iomanip>
 
 const char* WideStringToMultiByte(const WCHAR* wideStr)
 {
@@ -14,4 +16,27 @@ const char* WideStringToMultiByte(const WCHAR* wideStr)
         return nullptr;
     }
     return multi_byte_str;
+}
+
+bool HexStringToByteArray(const std::wstring& hexString, BYTE* byteArray, size_t arraySize)
+{
+    if (hexString.size() % 2 != 0 || hexString.size() / 2 > arraySize)
+    {
+        return false;
+    }
+
+    for (size_t i = 0; i < hexString.size(); i += 2)
+    {
+        std::wistringstream ss(hexString.substr(i, 2));
+        int byteValue;
+        ss >> std::hex >> byteValue;
+
+        if (ss.fail()) {
+            return false;  // Failed to convert a substring to an integer
+        }
+
+        byteArray[i / 2] = static_cast<BYTE>(byteValue);
+    }
+
+    return true;
 }

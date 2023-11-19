@@ -1,20 +1,15 @@
-// RE::LLUSORY DLL INJECTOR 0.1 | A Dll Injector By GHFear.
+// RE::LLUSORY DLL INJECTOR 0.2 | A Dll Injector By GHFear.
 // Uses C/C++ and Win32 API.
 
 #include "framework.h"
 #include "reinjector.h"
-#include <Windows.h>
-#include <iostream>
-#include <Commdlg.h>
-#include <CommCtrl.h>
-#include <tchar.h>
-#include <Psapi.h>
-#include <tlhelp32.h>
 #include "Injectors/CreateRemoteLoadLibrary/CreateRemoteLoadLibrary.h"
 #include "Injectors/ReflectiveInjection/reflective_injection.h"
 #include "Tools/Text.h"
 #include "Program/ListProcesses/list_processes.h"
 #include "Program/DllDialog/dll_dialog.h"
+#include "Program/ShellcodeEditor/shellcode_editor.h"
+
 
 LRESULT CALLBACK WindowProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
 
@@ -28,9 +23,9 @@ int APIENTRY wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPWSTR lpCmd
 
     RegisterClass(&wc);
 
-    HWND hwnd = CreateWindowEx(0, wc.lpszClassName, _T("RE::LLUSORY DLL INJECTOR"),
+    HWND hwnd = CreateWindowEx(0, wc.lpszClassName, _T("RE::LLUSORY DLL INJECTOR 0.2"),
         WS_OVERLAPPEDWINDOW | WS_VISIBLE,
-        CW_USEDEFAULT, CW_USEDEFAULT, 400, 160,
+        CW_USEDEFAULT, CW_USEDEFAULT, 500, 300,
         NULL, NULL, hInstance, NULL);
 
     if (!hwnd)
@@ -49,6 +44,54 @@ int APIENTRY wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPWSTR lpCmd
     DeleteObject(wc.hbrBackground);
 
     return 0;
+}
+
+INT set_injection_type(DWORD selected_process_id, const char* multi_bytes_file_path)
+{
+    if (InjectionType == 0)
+    {
+        InjectDLL_WriteProcessMemory(selected_process_id, multi_bytes_file_path);
+        return 1;
+    }
+    else if (InjectionType == 1)
+    {
+        InjectDll_Reflective(selected_process_id, g_Shellcode, sizeof(g_Shellcode));
+        return 1;
+    }
+
+    return 0;
+}
+
+void checkbox_injection_type(WPARAM wParam, HWND checkbox, HWND button)
+{
+    for (int i = 105; i <= 106; ++i)
+    {
+        if (i != LOWORD(wParam))
+        {
+            SendMessage(GetDlgItem(checkbox, i), BM_SETCHECK, BST_UNCHECKED, 0);
+        }
+    }
+    BOOL isChecked = IsDlgButtonChecked(checkbox, LOWORD(wParam));
+    if (isChecked == true && LOWORD(wParam) == 106)
+    {
+        InjectionType = 0;
+        EnableWindow(hButton2, TRUE);
+        EnableWindow(hButton3, TRUE);
+        EnableWindow(hButton4, FALSE);
+    }
+    else if (isChecked == true && LOWORD(wParam) == 105)
+    {
+        InjectionType = 1;
+        EnableWindow(hButton2, FALSE);
+        EnableWindow(hButton3, TRUE);
+        EnableWindow(hButton4, TRUE);
+    }
+    else
+    {
+        EnableWindow(hButton2, FALSE);
+        EnableWindow(hButton3, FALSE);
+        EnableWindow(hButton4, FALSE);
+    }
 }
 
 LRESULT CALLBACK WindowProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
@@ -95,15 +138,43 @@ LRESULT CALLBACK WindowProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
             0, 0, 400, 100,
             hwnd, (HMENU)103, (HINSTANCE)GetWindowLongPtr(hwnd, GWLP_HINSTANCE), NULL);
 
+        hButton4 = CreateWindowEx(0, _T("BUTTON"), _T("Edit Shellcode"),
+            WS_CHILD | WS_VISIBLE | BS_PUSHBUTTON,
+            240, 90, 150, 30,
+            hwnd, (HMENU)104, (HINSTANCE)GetWindowLongPtr(hwnd, GWLP_HINSTANCE), NULL);
+
+        hCheckbox1 = CreateWindowEx(0, _T("BUTTON"), _T("Shellcode"),
+            WS_CHILD | WS_VISIBLE | BS_AUTOCHECKBOX,
+            10, 80, 100, 30,
+            hwnd, (HMENU)105, (HINSTANCE)GetWindowLongPtr(hwnd, GWLP_HINSTANCE), NULL);
+
+        hCheckbox2 = CreateWindowEx(0, _T("BUTTON"), _T("DLL"),
+            WS_CHILD | WS_VISIBLE | BS_AUTOCHECKBOX,
+            10, 80, 100, 30,
+            hwnd, (HMENU)106, (HINSTANCE)GetWindowLongPtr(hwnd, GWLP_HINSTANCE), NULL);
+
+        // To check the checkbox by default
+        SendMessage(hCheckbox2, BM_SETCHECK, BST_CHECKED, 0);
+        EnableWindow(hButton2, TRUE);
+        EnableWindow(hButton3, TRUE);
+        EnableWindow(hButton4, FALSE);
+        EnableWindow(hEdit1, FALSE);
+        EnableWindow(hEdit2, FALSE);
+
         break;
     }
     case WM_SIZE:
+    {
         MoveWindow(hEdit1, 10, 10, LOWORD(lParam) - 130, 30, TRUE);
         MoveWindow(hEdit2, 10, 50, LOWORD(lParam) - 130, 30, TRUE);
         MoveWindow(hButton1, LOWORD(lParam) - 110, 10, 100, 30, TRUE);
         MoveWindow(hButton2, LOWORD(lParam) - 110, 50, 100, 30, TRUE);
-        MoveWindow(hButton3, 10, HIWORD(lParam) - 70, LOWORD(lParam) - 20, 60, TRUE);
+        MoveWindow(hButton3, 10, HIWORD(lParam) - 40, 100, 30, TRUE);
+        MoveWindow(hButton4, 120, HIWORD(lParam) - 40, 100, 30, TRUE);
+        MoveWindow(hCheckbox1, LOWORD(lParam) - 110, HIWORD(lParam) - 80, 100, 30, TRUE);
+        MoveWindow(hCheckbox2, LOWORD(lParam) - 110, HIWORD(lParam) - 40, 100, 30, TRUE);
         break;
+    }
     case WM_COMMAND:
         switch (LOWORD(wParam))
         {
@@ -120,26 +191,79 @@ LRESULT CALLBACK WindowProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
             }
             break;
         case 103:
-            const char* multi_bytes_file_path = WideStringToMultiByte(wide_file_path);
-            if (multi_bytes_file_path != nullptr)
+        {
+            if (InjectionType == 0)
             {
-                InjectDLL_WriteProcessMemory(selected_process_id, multi_bytes_file_path);
-                delete[] multi_bytes_file_path;
+                const char* multi_bytes_file_path = WideStringToMultiByte(wide_file_path);
+                if (multi_bytes_file_path != nullptr)
+                {
+                    InjectDLL_WriteProcessMemory(selected_process_id, multi_bytes_file_path);
+                    delete[] multi_bytes_file_path;
+                }
+                else
+                {
+                    std::cerr << "Error converting wide string to multi-byte string." << std::endl;
+                    MessageBox(nullptr, L"Error converting wide dll path string to multi-byte string.", L"Injection Status", MB_OK);
+                }
+                
             }
-            else 
+            else if (InjectionType == 1)
             {
-                std::cerr << "Error converting wide string to multi-byte string." << std::endl;
+                int textLength = sizeof(g_TextContent);
+             
+                if (HexStringToByteArray(g_TextContent, g_Shellcode, sizeof(g_Shellcode)))
+                {
+                    InjectDll_Reflective(selected_process_id, g_Shellcode, sizeof(g_Shellcode));
+                }
+                else
+                {
+                    std::cerr << "Error converting shellcode text to shellcode byte array." << std::endl;
+                    MessageBox(nullptr, L"Error converting shellcode text to shellcode byte array.", L"Injection Status", MB_OK);
+                }
+            }
+            
+            break;
+        }   
+        case 104:
+        {
+            WNDCLASS textWindowClass = {};
+            textWindowClass.lpfnWndProc = ShellCodeWindowProc;
+            textWindowClass.hInstance = (HINSTANCE)GetWindowLongPtr(hwnd, GWLP_HINSTANCE);
+            textWindowClass.lpszClassName = _T("MyTextWindowClass");
+            textWindowClass.hbrBackground = CreateSolidBrush(RGB(64, 64, 64));
+            RegisterClass(&textWindowClass);
+
+            CreateWindowEx(0, textWindowClass.lpszClassName, _T("Shellcode Editor"),
+                WS_OVERLAPPEDWINDOW | WS_VISIBLE,
+                CW_USEDEFAULT, CW_USEDEFAULT, 400, 300,
+                NULL, NULL, textWindowClass.hInstance, NULL);
+            break;
+        }
+        case 105: 
+        {
+            if (HIWORD(wParam) == BN_CLICKED)
+            {
+                checkbox_injection_type(wParam, hwnd, hButton1);
             }
             break;
+        }
+        case 106:
+        {
+            if (HIWORD(wParam) == BN_CLICKED)
+            {
+                checkbox_injection_type(wParam, hwnd, hButton2);
+            }
+            break;
+        }
         }
         break;
     case WM_GETMINMAXINFO:
     {
         MINMAXINFO* pMinMax = (MINMAXINFO*)lParam;
-        pMinMax->ptMinTrackSize.x = 400;
-        pMinMax->ptMinTrackSize.y = 200;
-        pMinMax->ptMaxTrackSize.x = 400;
-        pMinMax->ptMaxTrackSize.y = 200;
+        pMinMax->ptMinTrackSize.x = 500;
+        pMinMax->ptMinTrackSize.y = 300;
+        pMinMax->ptMaxTrackSize.x = 500;
+        pMinMax->ptMaxTrackSize.y = 300;
         break;
     }
     case WM_DESTROY:
