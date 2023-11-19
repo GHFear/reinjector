@@ -8,15 +8,15 @@ DWORD g_processIds[1024] = {};
 
 void ListProcesses(HWND hwnd)
 {
-    HWND listBox = CreateWindowEx(0, _T("LISTBOX"), NULL,
+    HWND list_box = CreateWindowEx(0, _T("LISTBOX"), NULL,
         WS_CHILD | WS_VISIBLE | WS_BORDER | WS_VSCROLL | LBS_NOINTEGRALHEIGHT | LBS_NOTIFY,
         10, 10, 300, 200, hwnd, (HMENU)IDC_PROCESS_LIST, GetModuleHandle(NULL), NULL);
 
-    int process_amount = 0;
+    UINT process_amount = 0;
     DWORD process_ids[1024] = {};
     DWORD bytes_returned = 0;
 
-    if (listBox)
+    if (list_box)
     {
         if (EnumProcesses(process_ids, sizeof(process_ids), &bytes_returned))
         {
@@ -35,7 +35,7 @@ void ListProcesses(HWND hwnd)
                     {
                         GetModuleBaseName(hProcess, hModule, szProcessName, sizeof(szProcessName) / sizeof(TCHAR));
                     }
-                    SendMessage(listBox, LB_ADDSTRING, 0, (LPARAM)szProcessName);
+                    SendMessage(list_box, LB_ADDSTRING, 0, (LPARAM)szProcessName);
                     CloseHandle(hProcess);
                     process_amount++;
                 }
@@ -62,8 +62,8 @@ LRESULT CALLBACK ProcessListWindowProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPAR
         case IDC_PROCESS_LIST:
             if (HIWORD(wParam) == LBN_SELCHANGE)
             {
-                HWND listBox = GetDlgItem(hwnd, IDC_PROCESS_LIST);
-                int selected_index = SendMessage(listBox, LB_GETCURSEL, 0, 0);
+                HWND list_box = GetDlgItem(hwnd, IDC_PROCESS_LIST);
+                int selected_index = SendMessage(list_box, LB_GETCURSEL, 0, 0);
 
                 if (selected_index != LB_ERR)
                 {

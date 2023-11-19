@@ -5,37 +5,37 @@
 
 const char* WideStringToMultiByte(const WCHAR* wideStr)
 {
-    int char_count = WideCharToMultiByte(CP_UTF8, 0, wideStr, -1, NULL, 0, NULL, NULL);
+    UINT char_count = WideCharToMultiByte(CP_UTF8, 0, wideStr, -1, NULL, 0, NULL, NULL);
     if (char_count == 0) {
-        return nullptr;
+        return NULL;
     }
 
     char* multi_byte_str = new char[char_count];
     if (WideCharToMultiByte(CP_UTF8, 0, wideStr, -1, multi_byte_str, char_count, NULL, NULL) == 0) {
         delete[] multi_byte_str;
-        return nullptr;
+        return NULL;
     }
     return multi_byte_str;
 }
 
-bool HexStringToByteArray(const std::wstring& hexString, BYTE* byteArray, size_t arraySize)
+bool HexStringToByteArray(const std::wstring& hex_string, BYTE* byte_array, size_t array_size)
 {
-    if (hexString.size() % 2 != 0 || hexString.size() / 2 > arraySize)
+    if (hex_string.size() % 2 != 0 || hex_string.size() / 2 > array_size)
     {
         return false;
     }
 
-    for (size_t i = 0; i < hexString.size(); i += 2)
+    for (size_t i = 0; i < hex_string.size(); i += 2)
     {
-        std::wistringstream ss(hexString.substr(i, 2));
-        int byteValue;
-        ss >> std::hex >> byteValue;
+        std::wistringstream string_stream(hex_string.substr(i, 2));
+        INT byte_value;
+        string_stream >> std::hex >> byte_value;
 
-        if (ss.fail()) {
-            return false;  // Failed to convert a substring to an integer
+        if (string_stream.fail()) {
+            return false;
         }
 
-        byteArray[i / 2] = static_cast<BYTE>(byteValue);
+        byte_array[i / 2] = static_cast<BYTE>(byte_value);
     }
 
     return true;

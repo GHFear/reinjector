@@ -20,7 +20,7 @@ LRESULT CALLBACK EditSubclassProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lP
     case WM_KEYDOWN:
     {
         if (wParam == VK_RETURN) {
-            SendMessage(GetParent(hwnd), WM_CLOSE, 0, 0);
+            SendMessage(GetParent(hwnd), WM_CLOSE, NULL, NULL);
             return 0;
         }
         else {
@@ -55,18 +55,18 @@ LRESULT CALLBACK ShellCodeWindowProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM
         break;
     case WM_CLOSE:
     {
-        int textLength = GetWindowTextLengthW(hEditMultiline);
+        UINT textLength = GetWindowTextLengthW(hEditMultiline);
         if (textLength % 2 == 0) {
             DestroyWindow(hwnd);
         }
         else {
-            MessageBox(nullptr, L"Shellcode is NOT valid!", L"Shellcode Status", MB_OK);
+            MessageBox(NULL, L"Shellcode is NOT valid!", L"Shellcode Status", MB_OK);
         }
         break;
     }
     case WM_DESTROY:
     {
-        int textLength = GetWindowTextLengthW(hEditMultiline);
+        UINT textLength = GetWindowTextLengthW(hEditMultiline);
         std::vector<wchar_t> buffer(textLength + 1);
         GetWindowTextW(hEditMultiline, buffer.data(), textLength + 1);
         g_TextContent = buffer.data();

@@ -6,14 +6,14 @@ void InjectDLL_WriteProcessMemory(DWORD processId, const char* dllPath) {
     // Check if process id is 0
     if (processId == 0)
     {
-        MessageBox(nullptr, L"Process ID is null!", L"Injection Status", MB_OK);
+        MessageBox(NULL, L"Process ID is null!", L"Injection Status", MB_OK);
         return;
     }
 
     // Check if shellcode is nullptr or 0 in size
     if (strlen(dllPath) == 0)
     {
-        MessageBox(nullptr, L"Dll Path is null!", L"Injection Status", MB_OK);
+        MessageBox(NULL, L"Dll Path is null!", L"Injection Status", MB_OK);
         return;
     }
 
@@ -60,5 +60,5 @@ void InjectDLL_WriteProcessMemory(DWORD processId, const char* dllPath) {
     CloseHandle(hThread);
     CloseHandle(hProcess);
     std::cout << "DLL injected successfully!" << std::endl;
-    MessageBox(nullptr, L"WriteProcessMemory / CreateRemoteThread Injection Successful!", L"Injection Status", MB_OK);
+    MessageBox(NULL, L"WriteProcessMemory / CreateRemoteThread Injection Successful!", L"Injection Status", MB_OK);
 }

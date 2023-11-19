@@ -6,13 +6,13 @@
 int InjectDll_Reflective(DWORD processId, BYTE shellcode[], uint32_t shellcode_size) {
     
     if (processId == 0) {
-        MessageBox(nullptr, L"Process ID is null!", L"Injection Status", MB_OK);
+        MessageBox(NULL, L"Process ID is null!", L"Injection Status", MB_OK);
         return 1;
     }
 
-    if (shellcode == nullptr || shellcode_size == 0)
+    if (shellcode == NULL || shellcode_size == 0)
     {
-        MessageBox(nullptr, L"Shellcode is null!", L"Injection Status", MB_OK);
+        MessageBox(NULL, L"Shellcode is null!", L"Injection Status", MB_OK);
         return 1;
     }
 
@@ -54,7 +54,7 @@ int InjectDll_Reflective(DWORD processId, BYTE shellcode[], uint32_t shellcode_s
     CloseHandle(hProcess);
 
     std::cout << "DLL injected successfully!" << std::endl;
-    MessageBox(nullptr, L"WriteProcessMemory / CreateRemoteThread Injection Successful!", L"Injection Status", MB_OK);
+    MessageBox(NULL, L"WriteProcessMemory / CreateRemoteThread Injection Successful!", L"Injection Status", MB_OK);
 
     return 0;
 }

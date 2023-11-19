@@ -1,4 +1,4 @@
-// RE::LLUSORY DLL INJECTOR 0.2 | A Dll Injector By GHFear.
+// RE::LLUSORY DLL INJECTOR 0.2.1 | A Dll Injector By GHFear.
 // Uses C/C++ and Win32 API.
 
 #include "framework.h"
@@ -14,7 +14,7 @@
 
 LRESULT CALLBACK WindowProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
 
-int APIENTRY wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPWSTR lpCmdLine, int nCmdShow)
+INT APIENTRY wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPWSTR lpCmdLine, int nCmdShow)
 {
     WNDCLASS wc = {};
     wc.lpfnWndProc = WindowProc;
@@ -25,7 +25,7 @@ int APIENTRY wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPWSTR lpCmd
 
     RegisterClass(&wc);
 
-    HWND hwnd = CreateWindowEx(0, wc.lpszClassName, _T("RE::LLUSORY DLL INJECTOR 0.2"),
+    HWND hwnd = CreateWindowEx(0, wc.lpszClassName, _T("RE::LLUSORY DLL INJECTOR 0.2.1"),
         WS_OVERLAPPEDWINDOW | WS_VISIBLE,
         CW_USEDEFAULT, CW_USEDEFAULT, 500, 300,
         NULL, NULL, hInstance, NULL);
@@ -54,24 +54,23 @@ INT set_injection_type(DWORD selected_process_id,  const wchar_t* wide_dll_file_
     if (InjectionType == 0)
     {
         const char* multi_bytes_dll_file_path = WideStringToMultiByte(wide_dll_file_path);
-        if (multi_bytes_dll_file_path != nullptr)
+        if (multi_bytes_dll_file_path != NULL)
         {
             if (wide_exe_file_path != L"")
             {
                 InjectDLL_WriteProcessMemory(selected_process_id, multi_bytes_dll_file_path);
             }
-            delete[] multi_bytes_dll_file_path;
         }
         else
         {
             std::cerr << "Error converting wide string to multi-byte string." << std::endl;
-            MessageBox(nullptr, L"Error converting wide dll path string to multi-byte string.", L"Injection Status", MB_OK);
+            MessageBox(NULL, L"Error converting wide dll path string to multi-byte string.", L"Injection Status", MB_OK);
         }
-
+        delete[] multi_bytes_dll_file_path;
     }
     else if (InjectionType == 1)
     {
-        int textLength = sizeof(g_TextContent);
+        UINT textLength = sizeof(g_TextContent);
 
         if (HexStringToByteArray(g_TextContent, g_Shellcode, sizeof(g_Shellcode)))
         {
@@ -80,33 +79,33 @@ INT set_injection_type(DWORD selected_process_id,  const wchar_t* wide_dll_file_
         else
         {
             std::cerr << "Error converting shellcode text to shellcode byte array." << std::endl;
-            MessageBox(nullptr, L"Error converting shellcode text to shellcode byte array.", L"Injection Status", MB_OK);
+            MessageBox(NULL, L"Error converting shellcode text to shellcode byte array.", L"Injection Status", MB_OK);
         }
     }
     else if (InjectionType == 2)
     {
         const char* multi_bytes_dll_file_path = WideStringToMultiByte(wide_dll_file_path);
-        if (multi_bytes_dll_file_path != nullptr)
+        if (multi_bytes_dll_file_path != NULL)
         {
             if (wide_exe_file_path != L"" && StartInject == true)
             {
                 LaunchAndInject(wide_exe_file_path, wide_dll_file_path);
             }
-            delete[] multi_bytes_dll_file_path;
         }
         else
         {
             std::cerr << "Error converting wide string to multi-byte string." << std::endl;
-            MessageBox(nullptr, L"Error converting wide dll path string to multi-byte string.", L"Injection Status", MB_OK);
+            MessageBox(NULL, L"Error converting wide dll path string to multi-byte string.", L"Injection Status", MB_OK);
         }
+        delete[] multi_bytes_dll_file_path;
     }
 
     return 0;
 }
 
-void checkbox_injection_type(WPARAM wParam, HWND checkbox, HWND button)
+VOID checkbox_injection_type(WPARAM wParam, HWND checkbox, HWND button)
 {
-    for (int i = 105; i <= 107; ++i)
+    for (UINT i = 105; i <= 107; ++i)
     {
         if (i != LOWORD(wParam))
         {
