@@ -1,7 +1,7 @@
 # reinjector by GHFear
 A work in progress dll injector. <br>
 
-Written in C / C++. <br>
+Written in C. <br>
 Win32 API User Interface. <br>
 
 **1. Supports Dll Injection Using CreateRemoteThread with LoadLibrary.** <br>
